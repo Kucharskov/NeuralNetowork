@@ -14,83 +14,105 @@ import nn.function.Sigmoid;
  */
 public class NeuralNetwork {
 
-    int input_nodes;
-    int hidden_nodes;
-    int output_nodes;
-    Matrix weights_ih;
-    Matrix weights_ho;
-    Matrix bias_h;
-    Matrix bias_o;
-    double learning_rate = 0.1;
+    int inputNodes;
+    int hiddenNodes;
+    int outputNodes;
+    Matrix weightsInputHidden;
+    Matrix weightsHiddenOutput;
+    Matrix biasHidden;
+    Matrix biasOutput;
+    double learningRate;
 
-    public NeuralNetwork(int in_nodes, int hid_nodes, int out_nodes) {
-        this.input_nodes = in_nodes;
-        this.hidden_nodes = hid_nodes;
-        this.output_nodes = out_nodes;
+    public NeuralNetwork(int input, int hidden, int output) {
+        this.inputNodes = input;
+        this.hiddenNodes = hidden;
+        this.outputNodes = output;
 
-        this.weights_ih = new Matrix(this.hidden_nodes, this.input_nodes);
-        this.weights_ho = new Matrix(this.output_nodes, this.hidden_nodes);
-        this.weights_ih.randomize();
-        this.weights_ho.randomize();
+        this.weightsInputHidden = new Matrix(this.hiddenNodes, this.inputNodes);
+        this.weightsHiddenOutput = new Matrix(this.outputNodes, this.hiddenNodes);
+        this.weightsInputHidden.randomize();
+        this.weightsHiddenOutput.randomize();
 
-        this.bias_h = new Matrix(this.hidden_nodes, 1);
-        this.bias_o = new Matrix(this.output_nodes, 1);
-        this.bias_h.randomize();
-        this.bias_o.randomize();
+        this.biasHidden = new Matrix(this.hiddenNodes, 1);
+        this.biasOutput = new Matrix(this.outputNodes, 1);
+        this.biasHidden.randomize();
+        this.biasOutput.randomize();
+
+        this.learningRate = 0.1;
     }
 
-    public Matrix predict(double[] input_array) {
+    public NeuralNetwork(int input, int hidden, int output, int learningRate) {
+        this(input, hidden, output);
+        this.learningRate = learningRate;
+    }
 
+    public Matrix predict(double[] inputArray) {
         // Generating the Hidden Outputs
-        Matrix inputs = Matrix.fromArray(input_array);
-        Matrix hidden = Matrix.mult(weights_ih, inputs).add(bias_h).map(new Sigmoid.Func());
+        Matrix inputs = Matrix.fromArray(inputArray);
+        Matrix hidden = Matrix.mult(weightsInputHidden, inputs)
+                .add(biasHidden)
+                .map(new Sigmoid.Func());
 
         // Generating the output's output!
-        Matrix outputs = Matrix.mult(weights_ho, hidden).add(bias_o).map(new Sigmoid.Func());
+        Matrix outputs = Matrix.mult(weightsHiddenOutput, hidden)
+                .add(biasOutput)
+                .map(new Sigmoid.Func());
 
-        // Sending back to the caller!
+        // Returning outputs
         return outputs;
     }
 
-    public void train(double[] input_array, double[] target_array) {
+    public void train(double[] inputArray, double[] targetArray) {
         // Generating the Hidden Outputs
-        Matrix inputs = Matrix.fromArray(input_array);
-        Matrix hidden = Matrix.mult(weights_ih, inputs).add(bias_h).map(new Sigmoid.Func());
+        Matrix inputs = Matrix.fromArray(inputArray);
+        Matrix hidden = Matrix.mult(weightsInputHidden, inputs)
+                .add(biasHidden)
+                .map(new Sigmoid.Func());
 
         // Generating the output's output!
-        Matrix outputs = Matrix.mult(weights_ho, hidden).add(bias_o).map(new Sigmoid.Func());
+        Matrix outputs = Matrix.mult(weightsHiddenOutput, hidden)
+                .add(biasOutput)
+                .map(new Sigmoid.Func());
 
         // Convert array to matrix object
-        Matrix targets = Matrix.fromArray(target_array);
+        Matrix targets = Matrix.fromArray(targetArray);
 
         // Calculate the error
         // ERROR = TARGETS - OUTPUTS
-        Matrix output_errors = Matrix.sub(targets, outputs);
+        Matrix outputErrors = Matrix.sub(targets, outputs);
 
         // let gradient = outputs * (1 - outputs);
         // Calculate gradient
-        Matrix gradients = new Matrix(outputs).map(new Sigmoid.Dfunc()).multHadamar(output_errors).mult(learning_rate);
+        Matrix gradients = new Matrix(outputs)
+                .map(new Sigmoid.Dfunc())
+                .multHadamar(outputErrors)
+                .mult(learningRate);
 
         // Calculate deltas
-        Matrix hidden_T = Matrix.transpose(hidden);
-        Matrix weight_ho_deltas = Matrix.mult(gradients, hidden_T);
+        Matrix hiddenTranspose = Matrix.transpose(hidden);
+        Matrix weightHiddenOutputDeltas = Matrix.mult(gradients, hiddenTranspose);
 
         // Adjust the weights by deltas
-        weights_ho.add(weight_ho_deltas);
+        weightsHiddenOutput.add(weightHiddenOutputDeltas);
         // Adjust the bias by its deltas (which is just the gradients)
-        bias_o.add(gradients);
+        biasOutput.add(gradients);
 
         // Calculate the hidden layer errors
-        Matrix hidden_errors = Matrix.mult(Matrix.transpose(weights_ho), output_errors);
+        Matrix weightsHiddenOutputTranspose = Matrix.transpose(weightsHiddenOutput);
+        Matrix hiddenErrors = Matrix.mult(weightsHiddenOutputTranspose, outputErrors);
 
         // Calculate hidden gradient
-        Matrix hidden_gradient = new Matrix(hidden).map(new Sigmoid.Dfunc()).multHadamar(hidden_errors).mult(learning_rate);
+        Matrix hiddenGradient = new Matrix(hidden)
+                .map(new Sigmoid.Dfunc())
+                .multHadamar(hiddenErrors)
+                .mult(learningRate);
 
         // Calcuate input->hidden deltas
-        Matrix weight_ih_deltas = Matrix.mult(hidden_gradient, Matrix.transpose(inputs));
+        Matrix inputTranspose = Matrix.transpose(inputs);
+        Matrix weightInputHiddenDeltas = Matrix.mult(hiddenGradient, inputTranspose);
 
-        weights_ih.add(weight_ih_deltas);
+        weightsInputHidden.add(weightInputHiddenDeltas);
         // Adjust the bias by its deltas (which is just the gradients)
-        bias_h.add(hidden_gradient);
+        biasHidden.add(hiddenGradient);
     }
 }
