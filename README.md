@@ -1,4 +1,4 @@
 # NeuralNetowork
 
-Simple Neural Network Java library based on Coding Train tutorials.
-[JavaScript orginal version](https://github.com/CodingTrain/Toy-Neural-Network-JS)
+Prosta biblioteka sieci neuronowej w Javie bazująca na poradnikach Coding Train.
+[Oryginalne repozytorium Coding Train](https://github.com/CodingTrain/Toy-Neural-Network-JS) (JavaScript)
