@@ -42,6 +42,15 @@ public class Matrix {
     public int getCols() {
         return cols;
     }
+    
+    //Setter zmieniający kształt z zachowaniem ilości elementów
+    public void setDimensions(int newRows, int newCols) {
+        if(rows*cols != newRows*newCols) {
+            throw new IllegalArgumentException("Wrong new Matrix dimensions");
+        }
+        rows = newRows;
+        cols = newCols;
+    }
 
     //Zabezpieczone pobieranie elementu z macierzy
     public double getElement(int row, int col) {
