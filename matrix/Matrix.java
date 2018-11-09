@@ -50,6 +50,11 @@ public class Matrix {
         }
         return array[getIndex(row, col)];
     }
+    
+    //Konwersja macierzy do zwykłej tablicy
+    public double[] toArray() {
+        return array;
+    }
 
     //Inicializacja losowymi liczbami z zakresu <-1, 1>
     public Matrix randomize() {

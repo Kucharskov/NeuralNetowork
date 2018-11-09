@@ -46,7 +46,7 @@ public class NeuralNetwork {
         this.learningRate = learningRate;
     }
 
-    public Matrix predict(double[] inputArray) {
+    public double[] predict(double[] inputArray) {
         // Generating the Hidden Outputs
         Matrix inputs = Matrix.fromArray(inputArray);
         Matrix hidden = Matrix.mult(weightsInputHidden, inputs)
@@ -59,7 +59,7 @@ public class NeuralNetwork {
                 .map(new Sigmoid.Func());
 
         // Returning outputs
-        return outputs;
+        return outputs.toArray();
     }
 
     public void train(double[] inputArray, double[] targetArray) {

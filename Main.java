@@ -38,9 +38,9 @@ public class Main {
         }
         
         System.out.println("XOR");
-        System.out.println("0, 0: " + nn.predict(new double[]{0,0}).getElement(0, 0));
-        System.out.println("0, 1: " + nn.predict(new double[]{0,1}).getElement(0, 0));
-        System.out.println("1, 0: " + nn.predict(new double[]{1,0}).getElement(0, 0));
-        System.out.println("1, 1: " + nn.predict(new double[]{1,1}).getElement(0, 0));
+        System.out.println("0, 0: " + nn.predict(new double[]{0,0})[0]);
+        System.out.println("0, 1: " + nn.predict(new double[]{0,1})[0]);
+        System.out.println("1, 0: " + nn.predict(new double[]{1,0})[0]);
+        System.out.println("1, 1: " + nn.predict(new double[]{1,1})[0]);
     }
 }
