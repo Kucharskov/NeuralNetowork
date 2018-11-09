@@ -15,7 +15,7 @@ public class Matrix {
 
     int rows;
     int cols;
-    public double[] array;
+    double[] array;
 
     public Matrix(int rows, int cols) {
         this.rows = rows;
