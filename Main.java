@@ -18,7 +18,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        NeuralNetwork nn = new NeuralNetwork(2, 4, 1);
+        NeuralNetwork nn = new NeuralNetwork(2, 1);
+        nn.addHiddenLayer(2);
 		
         for (int i = 0; i < 50000; i++) {
             switch (new Random().nextInt(4)) {
