@@ -41,6 +41,18 @@ public class NeuralNetwork {
         this.learningRate = learningRate;
     }
 
+    public void addHiddenLayer(int nodes) {
+        // Remove old output layer
+        layers.remove(layers.size() - 1);
+        
+        // Add new hidden layer
+        int inputNodes = layers.get(layers.size() - 1).outputNodes;
+        layers.add(new NeuralNetworkLayer(inputNodes, nodes));
+        
+        // Add new output layer
+        layers.add(new NeuralNetworkLayer(nodes, outputNodes));
+    }
+
     public double[] predict(double[] inputArray) {
         // Generating the Hidden Outputs
         Matrix inputs = Matrix.fromArray(inputArray);
