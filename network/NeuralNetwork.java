@@ -20,8 +20,8 @@ public class NeuralNetwork {
     ArrayList<NeuralNetworkLayer> layers;
     double learningRate;
 
-    public NeuralNetwork(int input, int hidden, int output) {
-        if (input <= 0 || hidden <= 0 || output <= 0) {
+    public NeuralNetwork(int input, int output) {
+        if (input <= 0 || output <= 0) {
             throw new IllegalArgumentException("Wrong amount of layer neurons");
         }
 
@@ -31,24 +31,31 @@ public class NeuralNetwork {
         // Creating the Layers of the Neural Network
         // ! The last Layer is the output layer
         this.layers = new ArrayList<>();
-        this.layers.add(new NeuralNetworkLayer(this.inputNodes, hidden));
         // hidden_nodes.length is the last entry at that time
-        this.layers.add(new NeuralNetworkLayer(hidden, this.outputNodes));
+        this.layers.add(new NeuralNetworkLayer(this.inputNodes, this.outputNodes));
 
         this.learningRate = 0.1;
     }
 
-    public NeuralNetwork(int input, int hidden, int output, int learningRate) {
-        this(input, hidden, output);
-        this.learningRate = learningRate;
+    public NeuralNetwork(int input, int output, double learningRate) {
+        this(input, output);
+        setLearningRate(learningRate);
+    }
+
+    public void setLearningRate(double lr) {
+        this.learningRate = lr;
     }
 
     public void addHiddenLayer(int nodes) {
+        if (nodes <= 0) {
+            throw new IllegalArgumentException("Wrong amount of layer neurons");
+        }
+
         // Remove old output layer
         layers.remove(layers.size() - 1);
         
         // Add new hidden layer
-        int inputNodes = layers.get(layers.size() - 1).outputNodes;
+        int inputNodes = (layers.isEmpty()) ? this.inputNodes : layers.get(layers.size() - 1).outputNodes;
         layers.add(new NeuralNetworkLayer(inputNodes, nodes));
         
         // Add new output layer
@@ -94,6 +101,7 @@ public class NeuralNetwork {
                 currentErrors = layers.get(i).applyError(predictions.get(i), inputs, currentErrors);
             } else {
                 currentErrors = layers.get(i).applyError(predictions.get(i), predictions.get(i - 1), currentErrors);
+
             }
         }
     }

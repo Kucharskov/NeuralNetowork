@@ -18,6 +18,10 @@ public class Matrix {
     double[] array;
 
     public Matrix(int rows, int cols) {
+        if (rows <= 0 || cols <= 0) {
+            throw new IllegalArgumentException("Wrong Matrix dimensions");
+        }
+        
         this.rows = rows;
         this.cols = cols;
 
