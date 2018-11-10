@@ -16,7 +16,6 @@ import nn.function.Sigmoid;
 public class NeuralNetwork {
 
     int inputNodes;
-    int hiddenNodes;
     int outputNodes;
     ArrayList<NeuralNetworkLayer> layers;
     double learningRate;
@@ -27,15 +26,14 @@ public class NeuralNetwork {
         }
 
         this.inputNodes = input;
-        this.hiddenNodes = hidden;
         this.outputNodes = output;
 
         // Creating the Layers of the Neural Network
         // ! The last Layer is the output layer
         this.layers = new ArrayList<>();
-        this.layers.add(new NeuralNetworkLayer(this.inputNodes, this.hiddenNodes));
+        this.layers.add(new NeuralNetworkLayer(this.inputNodes, hidden));
         // hidden_nodes.length is the last entry at that time
-        this.layers.add(new NeuralNetworkLayer(this.hiddenNodes, this.outputNodes));
+        this.layers.add(new NeuralNetworkLayer(hidden, this.outputNodes));
 
         this.learningRate = 0.1;
     }
@@ -102,17 +100,17 @@ public class NeuralNetwork {
 
     class NeuralNetworkLayer {
 
-        int inputNodes;
         int outputNodes;
         Matrix weights;
         Matrix bias;
 
         public NeuralNetworkLayer(int inputNodes, int outputNodes) {
-            this.inputNodes = inputNodes;
             this.outputNodes = outputNodes;
-            this.weights = new Matrix(outputNodes, inputNodes);
+            
+            this.weights = new Matrix(this.outputNodes, inputNodes);
             this.weights.randomize();
-            this.bias = new Matrix(outputNodes, 1);
+            
+            this.bias = new Matrix(this.outputNodes, 1);
             this.bias.randomize();
         }
 
