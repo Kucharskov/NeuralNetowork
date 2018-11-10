@@ -22,6 +22,10 @@ public class NeuralNetwork {
     double learningRate;
 
     public NeuralNetwork(int input, int hidden, int output) {
+        if (input <= 0 || hidden <= 0 || output <= 0) {
+            throw new IllegalArgumentException("Wrong amount of layer neurons");
+        }
+
         this.inputNodes = input;
         this.hiddenNodes = hidden;
         this.outputNodes = output;
