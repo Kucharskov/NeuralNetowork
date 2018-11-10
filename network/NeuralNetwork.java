@@ -53,11 +53,11 @@ public class NeuralNetwork {
 
         // Remove old output layer
         layers.remove(layers.size() - 1);
-        
+
         // Add new hidden layer
         int inputNodes = (layers.isEmpty()) ? this.inputNodes : layers.get(layers.size() - 1).outputNodes;
         layers.add(new NeuralNetworkLayer(inputNodes, nodes));
-        
+
         // Add new output layer
         layers.add(new NeuralNetworkLayer(nodes, outputNodes));
     }
@@ -71,7 +71,7 @@ public class NeuralNetwork {
         for (int i = 0; i < layers.size(); i++) {
             prediction = layers.get(i).predict(prediction);
         }
-        
+
         // Returning last prediction
         return prediction.toArray();
     }
@@ -114,10 +114,10 @@ public class NeuralNetwork {
 
         public NeuralNetworkLayer(int inputNodes, int outputNodes) {
             this.outputNodes = outputNodes;
-            
+
             this.weights = new Matrix(this.outputNodes, inputNodes);
             this.weights.randomize();
-            
+
             this.bias = new Matrix(this.outputNodes, 1);
             this.bias.randomize();
         }
